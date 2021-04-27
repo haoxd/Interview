@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -51,8 +52,89 @@ public class Java8Controller {
                         .orElse(null)); //如果找不到Product，则使用null
     }
 
+    /**
+     * computeIfAbsent -> 如果 k 存在 则直接返回value 不进行 计算，如果k不存在 则重新计算 返回计算后的value(对 hashMap 中指定 key 的值进行重新计算，如果不存在这个 key，则添加到 hasMap 中)
+     * compute ->  如果 k 存在 返回计算后的value，如果key 不存在 也返回计算后的value(对 hashMap 中指定 key 的值进行重新计算)
+     * computeIfPresent -> 如果 key 对应的 value 不存在，则返回该 null，如果存在，则返回通过 计算后的值。 如果key 不存在 直接返回null(对 hashMap 中指定 key 的值进行重新计算，前提是该 key 存在于 hashMap 中。)
+     **/
+    public static void main(String[] args) {
+        Map<String, String> cache2 = new HashMap<>();
+        cache2.put("1", "1");
+        cache2.put("2", "2");
+        cache2.put("9", "9");
+
+        String a1 = cache2.computeIfAbsent("1", k -> {
+
+                    System.out.println("k->" + k);
+                    return "1";
+                }
+        );
+        String a2 = cache2.computeIfAbsent("3", k -> {
+
+                    System.out.println("k->" + k);
+                    return "3";
+                }
+        );
+        System.out.println(a1);
+        System.out.println(a2);
+        System.out.println("cache2.get(\"3\") :" + cache2.get("3"));
+
+        System.out.println("###########################################################################");
+
+        String a3 = cache2.compute("1", (k, v) -> {
+
+                    System.out.println("k->" + k);
+                    System.out.println("v->" + v);
+                    return "4";
+                }
+        );
+        System.out.println(a3);
+
+        String a4 = cache2.compute("4", (k, v) -> {
+
+                    System.out.println("k->" + k);
+                    System.out.println("v->" + v);
+                    return "4";
+                }
+        );
 
 
+        System.out.println(a4);
+
+        System.out.println("###########################################################################");
+
+        String s = cache2.computeIfPresent("9", (k, v) -> {
+
+            System.out.println("k->" + k);
+            System.out.println("v->" + v);
+            return "1000";
+
+        });
+        System.out.println(s);
+        String s2 = cache2.computeIfPresent("10", (k, v) -> {
+
+            System.out.println("k->" + k);
+            System.out.println("v->" + v);
+            return "9000";
+
+        });
+
+        System.out.println(s2);
+        System.out.println("###########################################################################");
+
+
+        //方法会先判断指定的 key 是否存在，如果不存在，则添加键值对到 hashMap 中，如果存在，返回计算后的value
+        cache2.put("cache2","cache2");
+        cache2.merge("cache2", "AVDDD", (oldValue, newValue) -> {
+
+            System.out.println("oldValue->"+oldValue);
+            System.out.println("newValue->"+newValue);
+
+           return oldValue + newValue;
+
+        });
+        System.out.println(cache2.get("cache2"));
+    }
 
 
 }

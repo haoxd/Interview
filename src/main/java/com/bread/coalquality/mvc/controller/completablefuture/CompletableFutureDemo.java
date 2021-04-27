@@ -56,18 +56,20 @@ public class CompletableFutureDemo {
     public static void test3() throws ExecutionException, InterruptedException {
 
         System.out.println("start");
-        CompletableFuture<Integer> completableFuture = CompletableFuture
+        boolean completableFuture = CompletableFuture
                 .supplyAsync(() -> {
                     System.out.println(1);
-                    int a = 5 / 0;
                     System.out.println(2);
-                    return a;
+                    try {
+                        TimeUnit.SECONDS.sleep(5);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    return true;
                 }, ThreadPoolProvider.getPool())
                 .whenComplete((result, exception) -> {
-                    System.out.println(result);
-                    System.out.println(exception.getMessage());
-
-                });
+                    System.out.println("$$$$$$$$$$"+result);
+                }).get();
 
         System.out.println("end");
     }
@@ -133,12 +135,16 @@ public class CompletableFutureDemo {
 
         CompletableFuture<Void> stringCompletableFuture = CompletableFuture.runAsync(() -> {
 
-            System.out.println(Thread.currentThread().getId() + "启动");
-
+            System.out.println("1" + "启动");
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
         }, ThreadPoolProvider.getPool()).thenRunAsync(() -> {
 
-            System.out.println(Thread.currentThread().getName() + "启动");
+            System.out.println("2" + "启动");
         }, ThreadPoolProvider.getPool());
     }
 
@@ -150,7 +156,12 @@ public class CompletableFutureDemo {
 
         CompletableFuture.supplyAsync(() -> {
 
-            System.out.println(Thread.currentThread().getId() + "启动");
+            System.out.println("ACSSSSSSSSS" + "启动");
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return "ABC";
 
 
@@ -158,7 +169,7 @@ public class CompletableFutureDemo {
 
             System.out.println(res + "ABC");
 
-        }, ThreadPoolProvider.getPool());
+        }, ThreadPoolProvider.getPool()).get();
     }
 
     /***
@@ -167,15 +178,23 @@ public class CompletableFutureDemo {
      * **/
     public static void test8() throws ExecutionException, InterruptedException {
 
-        String a = CompletableFuture.supplyAsync(() -> {
+        CompletableFuture.supplyAsync(() -> {
 
-            System.out.println(Thread.currentThread().getId() + "启动");
+            System.out.println("VVVVVVVVVVVVVVVVVVVV" + "启动");
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return "ABC";
 
-        }, ThreadPoolProvider.getPool()).thenApplyAsync(res -> res + "CCCC", ThreadPoolProvider.getPool())
-                .get();
+        }, ThreadPoolProvider.getPool()).thenApplyAsync(res -> {
+            System.out.println("YYYYYYYYYYYYYYYYYYYYYY");
+            return res + "CCCC";
 
-        System.out.println(a);
+        }, ThreadPoolProvider.getPool());
+
+
     }
 
 
@@ -516,16 +535,19 @@ public class CompletableFutureDemo {
 
     }
 
+
+
+
     public static void main(String[] args) {
 
         try {
             //test1();
             // test2();
-            //test3();
+            test3();
             //test5();
             //test6();
             //test7();
-            //test8();
+           // test8();
             // test9();
             //test10();
             //test12();
@@ -534,7 +556,7 @@ public class CompletableFutureDemo {
             //test15();
             // test16();
             //test17();
-            test18();
+            //test18();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

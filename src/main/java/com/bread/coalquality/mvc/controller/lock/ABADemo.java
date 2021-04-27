@@ -1,10 +1,15 @@
 package com.bread.coalquality.mvc.controller.lock;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.atomic.AtomicStampedReference;
+import java.util.stream.Collectors;
 
 /**
  * @Description: ABA: 进行获取主内存值的时候，该内存值在我们写入主内存的时候，已经被修改了N次，但是最终又改成原来的值了
@@ -26,7 +31,10 @@ public class ABADemo {
 
     public static void main(String[] args) {
         atomicReference();
-        atomicStampedReference();
+       // atomicStampedReference();
+
+
+
 
     }
 
@@ -74,16 +82,14 @@ public class ABADemo {
             log.info("T3 第一次版本号:" + version);
 
 
-
             // 传入4个值，期望值，更新值，期望版本号，更新版本号
-            integerAtomicStampedReference.compareAndSet(100, 101, integerAtomicStampedReference.getStamp(), integerAtomicStampedReference.getStamp()+1);
+            integerAtomicStampedReference.compareAndSet(100, 101, integerAtomicStampedReference.getStamp(), integerAtomicStampedReference.getStamp() + 1);
 
             log.info("T3 第二次版本号:" + integerAtomicStampedReference.getStamp());
 
-            integerAtomicStampedReference.compareAndSet(101, 100, integerAtomicStampedReference.getStamp(), integerAtomicStampedReference.getStamp()+1);
+            integerAtomicStampedReference.compareAndSet(101, 100, integerAtomicStampedReference.getStamp(), integerAtomicStampedReference.getStamp() + 1);
 
             log.info("T3 第三次版本号:" + integerAtomicStampedReference.getStamp());
-
 
 
             try {
@@ -91,7 +97,6 @@ public class ABADemo {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
 
 
         }, "T3").start();
@@ -110,16 +115,15 @@ public class ABADemo {
                 e.printStackTrace();
             }
 
-            boolean result = integerAtomicStampedReference.compareAndSet(100, 1024, stamp, stamp+1);
+            boolean result = integerAtomicStampedReference.compareAndSet(100, 1024, stamp, stamp + 1);
 
             log.info(Thread.currentThread().getName() + "\t 修改成功否：" + result + "\t 当前最新实际版本号：" + integerAtomicStampedReference.getStamp());
 
             log.info(Thread.currentThread().getName() + "\t 当前实际最新值" + integerAtomicStampedReference.getReference());
 
 
-
-
         }, "T4").start();
     }
+
 
 }
