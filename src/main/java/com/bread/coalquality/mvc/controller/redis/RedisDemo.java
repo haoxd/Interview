@@ -25,4 +25,11 @@ package com.bread.coalquality.mvc.controller.redis;
  */
 public class RedisDemo {
 
+
+    String script ="if redis.call(\"get\",KEYS[1]) == ARGV[1]\n" +
+            "    then\n" +
+            "    return redis.call(\"del\",KEYS[1])\n" +
+            "            else\n" +
+            "            return 0\n" +
+            "    end";
 }
