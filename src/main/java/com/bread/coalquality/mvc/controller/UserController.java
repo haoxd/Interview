@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,12 @@ public class UserController {
         map.put("3",userService.selectAll3());
 
         return map;
+    }
+
+    public static void main(String[] args) {
+
+
+        new HashMap<>();
     }
 
 
