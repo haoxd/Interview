@@ -191,6 +191,46 @@ package com.bread.coalquality.mvc.controller.redis;
  *
  *  </>
  *
+ *  <>redis 运维
+ *
+ *          1   最基本的监控命令：INFO 命令-》{
+ *
+ *
+ *                  无论你是运行单实例或是集群，我建议你重点关注一下
+ *                  stat：通用统计信息
+ *                  commandstat： 不通类型命令的调用统计信息
+ *                  cpu 查询cpu情况
+ *                  memory 查看内存使用情况
+ *
+ *
+ *          }
+ *
+ *          2 redis运维的工具-》{
+ *
+ *              1 面向 Prometheus 的 Redis-exporter 监控
+ *              2 数据迁移工具 Redis-shake -》{
+ *
+ *                  Redis-shake 的基本运行原理，是先启动 Redis-shake 进程，这个进程模拟了一个 Redis 实例。
+ *                  然后，Redis-shake 进程和数据迁出的源实例进行数据的全量同步。
+ *
+ *              }
+ *              3 数据一致性比对工具 redis-full-check -》{
+ *
+ *                  Redis-full-check 提供了三种比对模式，我们可以通过 comparemode 参数进行设置
+ *
+ *                  1 KeyOutline，只对比 key 值是否相等；
+ *                  2 ValueOutline，只对比 value 值的长度是否相等；
+ *                  3 FullValue，对比 key 值、value 长度、value 值是否相等。
+ *
+ *              }
+ *              4 集群管理工具 CacheCloud
+ *                  实现了主从集群、哨兵集群和 Redis Cluster 的自动部署和管理
+ *
+ *          }
+ *
+ *
+ *  </>
+ *
  * </>
  */
 public class RedisDemo {
